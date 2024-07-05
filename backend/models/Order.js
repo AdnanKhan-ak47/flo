@@ -32,6 +32,12 @@ const OrderSchema = new Schema({
   size: {
     type: String,
     required: true
+  },
+  cancelReason: {
+    type: String
+  },
+  complaint: {
+    type: String
   }
 })
 

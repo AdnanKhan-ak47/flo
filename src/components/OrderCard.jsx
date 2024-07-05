@@ -24,10 +24,13 @@ import { Label } from "/src/components/ui/label"
 
 
 
-const OrderCard = () => {
+const OrderCard = ({ orderData }) => {
+
+
+  console.log(orderData);
 
   const onChange = (e) => {
-    const { name, value } = event.target;
+    const { name, value } = e.target;
     setDimensions((prevData) => ({ ...prevData, [name]: value }));
   }
 
@@ -35,9 +38,52 @@ const OrderCard = () => {
     if (e.target.name == "complaint") {
       setComplaint(e.target.value)
     }
+    else if (e.target.name == "cancelReason") {
+      setCancelReason(e.target.value)
+    }
   }
 
+  const modifyOrder = async () => {
+    const size = `${dimensions.length}*${dimensions.breadth}*${dimensions.height}`
+    const response = await fetch("http://localhost:5000/api/orders/modifyorder", {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ orderID: orderData.orderID, size: size })
+    });
+    const json = await response.json();
+    console.log(json);
+  }
+
+  const cancelOrder = async () => {
+    const response = await fetch("http://localhost:5000/api/orders/cancelorder", {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ orderID: orderData.orderID, cancelReason: cancelReason })
+    });
+    const json = await response.json();
+    console.log(json);
+  }
+
+  const fileCompalint = async () => {
+    const response = await fetch("http://localhost:5000/api/orders/complaint", {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ orderID: orderData.orderID, complaint: complaint })
+    });
+    const json = await response.json();
+    console.log(json);
+  }
+
+
+
   const [dimensions, setDimensions] = useState({ length: 0, breadth: 0, height: 0 })
+  const [cancelReason, setCancelReason] = useState("")
   const [complaint, setComplaint] = useState("")
 
   const [formType, setFormType] = useState("")
@@ -50,11 +96,14 @@ const OrderCard = () => {
         <img className='h-36' src="https://www.flomattress.com/cdn/shop/products/2_Ergo-sw_1_530x530.jpg?v=1638010457" alt="mattress_alt" />
       </div>
       <div className='p-2 w-full'>
-        <p>Product:</p>
-        <p>Shipping Name:</p>
-        <p>Shipping Address:</p>
-        <p>Phone:</p>
-        <p>Order Status:</p>
+        <p>Product: {orderData?.product}</p>
+        <p>Size: {orderData?.size}</p>
+        <p>Shipping Name: {orderData?.customerName}</p>
+        <p>Shipping Address: {orderData?.shippingAddress}</p>
+        <p>Phone: {orderData?.phoneNumber}</p>
+        <p>Order Status: {orderData?.orderStatus}</p>
+        {orderData.cancelReason ? <p>Cancellation Reason: {orderData.cancelReason}</p> : null}
+        {orderData.complaint ? <p>Complain: {orderData.complaint}</p> : null}
         <div className='p-2 float-end bg-blue-600 hover:bg-blue-800 text-white rounded-md '>
           <Dialog className="text-lg">
             <DropdownMenu className="bg-blue-800" >
@@ -84,7 +133,7 @@ const OrderCard = () => {
                       Make Changes to the dimensions of your order.
                     </DialogDescription>
                   </DialogHeader>
-                  <form action="">
+                  <form action="" onSubmit={modifyOrder}>
                     <div>
                       <Label htmlFor="length" className="text-right">
                         Length
@@ -103,7 +152,7 @@ const OrderCard = () => {
                       </Label>
                       <Input onChange={onChange} name="height" id="height" value={dimensions.h} className="col-span-3" />
                     </div>
-                    <Button>
+                    <Button type="submit">
                       Submit
                     </Button>
                   </form>
@@ -118,8 +167,14 @@ const OrderCard = () => {
                       Are you sure you want to cancel?
                     </DialogDescription>
                   </DialogHeader>
+                  <div>
+                    <Label htmlFor="cancelReason" className="text-right">
+                      Reason For Cancellation:
+                    </Label>
+                    <Input onChange={handleChange} name="cancelReason" id="cancelReason" value={cancelReason} className="col-span-3" required />
+                  </div>
                   <DialogFooter>
-                    <Button className="bg-red-700 hover:bg-red-800 text-white">
+                    <Button onClick={cancelOrder} className="bg-red-700 hover:bg-red-800 text-white">
                       Cancel the Order
                     </Button>
                   </DialogFooter>
@@ -145,9 +200,9 @@ const OrderCard = () => {
                       Please write your complaint regarding the product.
                     </DialogDescription>
                   </DialogHeader>
-                  <textarea className='p-2' placeholder='Write here...' rows={10} cols={20} name="complaint" value={complaint} onChange={handleChange} id="complaint"></textarea>
+                  <textarea className='p-2' placeholder='Write here...' rows={10} cols={20} name="complaint" value={complaint} onChange={handleChange} required id="complaint"></textarea>
                   <DialogFooter>
-                    <Button className="bg-blue-700 hover:bg-blue-800 text-white">
+                    <Button onClick={fileCompalint} className="bg-blue-700 hover:bg-blue-800 text-white">
                       Submit
                     </Button>
                   </DialogFooter>
