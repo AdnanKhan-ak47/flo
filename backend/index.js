@@ -1,6 +1,7 @@
-import connectToMongo from './db';
-import express from 'express' 
+import connectToMongo from './db.js';
+import express from 'express'
 import cors from 'cors';
+import orderRoutes from './routes/order.js'
 
 connectToMongo();
 const app = express();
@@ -13,6 +14,10 @@ app.use(express.json());
 
 // app.use('/api/auth', require('./routes/auth'));
 // app.use('/api/notes', require('./routes/notes'));
+app.get('/api', (req, res) => {
+    res.send('Hello World!')
+})
+app.use('/api/orders', orderRoutes);
 
 app.listen(port, () => {
     console.log(`Backend listening on http://localhost:${port}`)
