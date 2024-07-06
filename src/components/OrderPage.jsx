@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import OrderCard from './OrderCard'
 
 const OrderPage = () => {
@@ -30,8 +30,8 @@ const OrderPage = () => {
     <div className='flex flex-col items-center h-screen bg-gray-300 text-xl'>
       <div className='bg-white h-fit py-4 px-8 w-[80%] mt-20 rounded-md'>
         <div className='flex flex-row m-2'>
-          <input name='orderID' type="text" placeholder='Enter your Order ID' onChange={onChange} value={orderID} className='p-2 w-[40%] focus:outline-none focus:outline-blue-500 rounded-md ' />
-          <button onClick={fetchData} className='bg-blue-800 text-white p-2 h-fit rounded-md'>Track Your Order</button>
+          <input name='orderID' type="text" placeholder='Enter your Order ID' onChange={onChange} value={orderID} className='p-2 w-[40%] border-2 focus:border-none focus:outline-none focus:outline-blue-500 rounded-md mr-4 ' />
+          <button onClick={fetchData} className='hover:bg-white font-semibold hover:text-blue-600 outline hover:outline-blue-600 bg-blue-600 text-white transition-colors p-2 h-fit rounded-md'>Track Your Order</button>
         </div>
         <p>Check the current status of your shipment.</p>
       </div>

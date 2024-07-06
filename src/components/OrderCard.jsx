@@ -22,6 +22,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "/src/components/ui/input"
 import { Label } from "/src/components/ui/label"
 
+import { IoIosArrowDropdown } from "react-icons/io";
+
+
 
 
 const OrderCard = ({ orderData }) => {
@@ -68,6 +71,18 @@ const OrderCard = ({ orderData }) => {
     console.log(json);
   }
 
+  const returnOrder = async () => {
+    const response = await fetch("http://localhost:5000/api/orders/returnorder", {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ orderID: orderData.orderID })
+    });
+    const json = await response.json();
+    console.log(json);
+  }
+
   const fileCompalint = async () => {
     const response = await fetch("http://localhost:5000/api/orders/complaint", {
       method: 'PUT',
@@ -91,35 +106,35 @@ const OrderCard = ({ orderData }) => {
 
 
   return (
-    <div className='bg-white flex flex-row p-4 mt-12 w-[40%] rounded-sm text-lg'>
-      <div className='h-36 p-2 border border-r-black'>
-        <img className='h-36' src="https://www.flomattress.com/cdn/shop/products/2_Ergo-sw_1_530x530.jpg?v=1638010457" alt="mattress_alt" />
+    <div className='bg-white flex flex-row p-4 mt-12 w-[40%] rounded-sm text-lg h-fit'>
+      <div className='p-2 border border-r-black'>
+        <img className='h-60 w-60' src="https://www.flomattress.com/cdn/shop/products/2_Ergo-sw_1_530x530.jpg?v=1638010457" alt="mattress_alt" />
       </div>
       <div className='p-2 w-full'>
-        <p>Product: {orderData?.product}</p>
-        <p>Size: {orderData?.size}</p>
-        <p>Shipping Name: {orderData?.customerName}</p>
-        <p>Shipping Address: {orderData?.shippingAddress}</p>
-        <p>Phone: {orderData?.phoneNumber}</p>
-        <p>Order Status: {orderData?.orderStatus}</p>
-        {orderData.cancelReason ? <p>Cancellation Reason: {orderData.cancelReason}</p> : null}
-        {orderData.complaint ? <p>Complain: {orderData.complaint}</p> : null}
-        <div className='p-2 float-end bg-blue-600 hover:bg-blue-800 text-white rounded-md '>
+        <p><span className='font-semibold'>Product: </span>{orderData?.product}</p>
+        <p><span className='font-semibold'>Size: </span>{orderData?.size}</p>
+        <p><span className='font-semibold'>Shipping Name: </span>{orderData?.customerName}</p>
+        <p><span className='font-semibold'>Shipping Address: </span>{orderData?.shippingAddress}</p>
+        <p><span className='font-semibold'>Phone: </span>{orderData?.phoneNumber}</p>
+        <p><span className='font-semibold'>Order Status: </span>{orderData?.orderStatus}</p>
+        {orderData.cancelReason ? <p><span className='font-semibold'>Cancellation Reason: </span>{orderData.cancelReason}</p> : null}
+        {orderData.complaint ? <p><span className='font-semibold'>Complain: </span>{orderData.complaint}</p> : null}
+        <div className='p-2 float-end hover:bg-white font-semibold hover:text-blue-600 outline hover:outline-blue-600 bg-blue-600 text-white transition-colors h-fit rounded-md '>
           <Dialog className="text-lg">
-            <DropdownMenu className="bg-blue-800" >
-              <DropdownMenuTrigger>Manage Your Order v</DropdownMenuTrigger>
-              <DropdownMenuContent className="w-52  text-lg">
+            <DropdownMenu className="" >
+              <DropdownMenuTrigger className="flex flex-row items-center space-x-2 "> <p> Manage Your Order </p> <IoIosArrowDropdown size={25} /> </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-52">
                 <DialogTrigger onClick={() => { setFormType("modify") }} className="w-full" >
-                  <DropdownMenuItem>Modify Your Order</DropdownMenuItem>
+                  <DropdownMenuItem className="text-lg hover:!text-blue-600"> Modify Your Order</DropdownMenuItem>
                 </DialogTrigger>
                 <DialogTrigger onClick={() => { setFormType("cancel") }} className="w-full" >
-                  <DropdownMenuItem>Cancel Your Order</DropdownMenuItem>
+                  <DropdownMenuItem className="text-lg hover:!text-blue-600">Cancel Your Order</DropdownMenuItem>
                 </DialogTrigger>
                 <DialogTrigger onClick={() => { setFormType("return") }} className="w-full" >
-                  <DropdownMenuItem>Return Your Order</DropdownMenuItem>
+                  <DropdownMenuItem className="text-lg hover:!text-blue-600">Return Your Order</DropdownMenuItem>
                 </DialogTrigger>
                 <DialogTrigger onClick={() => { setFormType("complaint") }} className="w-full" >
-                  <DropdownMenuItem>File a Complaint</DropdownMenuItem>
+                  <DropdownMenuItem className="text-lg hover:!text-blue-600">File a Complaint</DropdownMenuItem>
                 </DialogTrigger>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -138,21 +153,21 @@ const OrderCard = ({ orderData }) => {
                       <Label htmlFor="length" className="text-right">
                         Length
                       </Label>
-                      <Input onChange={onChange} name="length" id="length" value={dimensions.l} className="col-span-3" />
+                      <Input onChange={onChange} name="length" id="length" value={dimensions.l} className="col-span-3 border-2 focus:border-none" />
                     </div>
                     <div>
                       <Label htmlFor="breadth" className="text-right">
                         Breadth
                       </Label>
-                      <Input onChange={onChange} name="breadth" id="breadth" value={dimensions.b} className="col-span-3" />
+                      <Input onChange={onChange} name="breadth" id="breadth" value={dimensions.b} className="col-span-3 border-2 focus:border-none" />
                     </div>
                     <div>
                       <Label htmlFor="height" className="text-right">
                         Height
                       </Label>
-                      <Input onChange={onChange} name="height" id="height" value={dimensions.h} className="col-span-3" />
+                      <Input onChange={onChange} name="height" id="height" value={dimensions.h} className="col-span-3 border-2 focus:border-none" />
                     </div>
-                    <Button type="submit">
+                    <Button type="submit" className='font-semibold transition-colors hover:text-blue-700 hover:bg-white hover:outline hover:outline-blue-700 bg-blue-700 text-white mt-4'>
                       Submit
                     </Button>
                   </form>
@@ -167,17 +182,17 @@ const OrderCard = ({ orderData }) => {
                       Are you sure you want to cancel?
                     </DialogDescription>
                   </DialogHeader>
-                  <div>
+                  <form action='' onSubmit={cancelOrder}>
                     <Label htmlFor="cancelReason" className="text-right">
                       Reason For Cancellation:
                     </Label>
-                    <Input onChange={handleChange} name="cancelReason" id="cancelReason" value={cancelReason} className="col-span-3" required />
-                  </div>
-                  <DialogFooter>
-                    <Button onClick={cancelOrder} className="bg-red-700 hover:bg-red-800 text-white">
-                      Cancel the Order
-                    </Button>
-                  </DialogFooter>
+                    <Input onChange={handleChange} name="cancelReason" id="cancelReason" value={cancelReason} className="col-span-3 border-2 focus:border-none" required />
+                    <DialogFooter>
+                      <Button type="submit" className="font-semibold transition-colors hover:text-red-700 hover:bg-white hover:outline hover:outline-red-700 bg-red-700 text-white mt-4">
+                        Cancel the Order
+                      </Button>
+                    </DialogFooter>
+                  </form>
                 </>
                 : null}
 
@@ -189,6 +204,13 @@ const OrderCard = ({ orderData }) => {
                       Are you sure you want to return?
                     </DialogDescription>
                   </DialogHeader>
+                  <form action="" onSubmit={returnOrder}>
+                    <DialogFooter>
+                      <Button type="submit" className="font-semibold transition-colors hover:text-red-700 hover:bg-white hover:outline hover:outline-red-700 bg-red-700 text-white mt-4">
+                        Yes, Return
+                      </Button>
+                    </DialogFooter>
+                  </form>
                 </>
                 : null}
 
@@ -200,12 +222,14 @@ const OrderCard = ({ orderData }) => {
                       Please write your complaint regarding the product.
                     </DialogDescription>
                   </DialogHeader>
-                  <textarea className='p-2' placeholder='Write here...' rows={10} cols={20} name="complaint" value={complaint} onChange={handleChange} required id="complaint"></textarea>
-                  <DialogFooter>
-                    <Button onClick={fileCompalint} className="bg-blue-700 hover:bg-blue-800 text-white">
-                      Submit
-                    </Button>
-                  </DialogFooter>
+                  <form action="" onSubmit={fileCompalint}>
+                    <textarea className='p-2 w-full border-2 focus:border-none' placeholder='Write here...' rows={10} cols={20} name="complaint" value={complaint} onChange={handleChange} required id="complaint"></textarea>
+                    <DialogFooter>
+                      <Button type='submit' className="font-semibold transition-colors hover:text-blue-700 hover:bg-white hover:outline hover:outline-blue-700 bg-blue-700 text-white mt-4">
+                        Submit
+                      </Button>
+                    </DialogFooter>
+                  </form>
                 </>
                 : null}
 
